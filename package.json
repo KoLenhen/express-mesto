@@ -1,0 +1,22 @@
+{
+  "name": "mesto-express",
+  "version": "1.0.0",
+  "description": "praktikum_project",
+  "main": "app.js",
+  "scripts": {
+    "start": "PORT=3000 node app.js",
+    "dev": "nodemon app.js",
+    "eslint": "eslint"
+  },
+  "author": "KoLenhen",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.14.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "nodemon": "^2.0.6"
+  }
+}
