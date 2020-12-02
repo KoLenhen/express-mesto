@@ -6,6 +6,8 @@
   "scripts": {
     "start": "PORT=3000 node app.js",
     "dev": "nodemon app.js",
+    "lint": "eslint --ignore-path .eslintignore .",
+    "link": "eslint ./src --fix",
     "eslint": "eslint"
   },
   "author": "KoLenhen",

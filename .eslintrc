@@ -1,6 +1,18 @@
 {
   "extends": "airbnb-base",
   "rules": {
-    "no-underscore-dangle": "off"
+    "no-underscore-dangle": "off",
+    "arrow-parens": "off",
+    "comma-dangle": "off",
+    "require-jsdoc": "off",
+    "object-curly-spacing": "off",
+    "eol-last": "off",
+    "no-console": "off",
+    "padded-blocks": "off",
+    "arrow-body-style": "off",
+    "indent": "off",
+    "linebreak-style": "off",
+    "import/newline-after-import": "off",
+    "operator-linebreak": "off"
   }
 }
