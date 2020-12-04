@@ -5,12 +5,19 @@ const dataPath = path.join(__dirname, '..', 'data', 'users.json');
 
 const getUsers = (req, res) => {
   return getFileData(dataPath)
-    .then(users => res.status(200).send(users))
+    .then(users => {
+      if (!users) res.status(500).send({ message: 'Внутренняя ошибка сервера' });
+      else res.status(200).send(users);
+    })
     .catch(error => res.status(500).send(error));
 };
 
 const getUser = (req, res) => {
   return getFileData(dataPath)
+    .then(users => {
+      if (!users) res.status(500).send({ message: 'Внутренняя ошибка сервера' });
+      return users;
+    })
     .then(users => users.find(user => user._id === req.params.id))
     .then(user => {
       if (!user) {
