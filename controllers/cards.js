@@ -2,7 +2,6 @@ const Card = require('../models/card');
 
 const getCards = (req, res) => {
   Card.find({})
-    .populate('owner')
     .then((cards) => {
       if (cards.length === 0) {
         res.status(404).send({ message: 'Cards not found' });

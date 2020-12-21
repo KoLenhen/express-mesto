@@ -16,21 +16,16 @@ const getUsers = (req, res) => {
 
 const getUserByID = (req, res) => {
   User.findById(req.params.id)
-    .orFail(() => {
-      const err = new Error('User not found');
-      err.statusCode = 404;
-      throw err;
-    })
     .then((user) => {
+      if (!user) {
+        res.status(404).send({ message: 'User with this ID is not found' });
+        return;
+      }
       res.status(200).send(user);
     })
     .catch((error) => {
       if (error.name === 'CastError') {
         res.status(400).send({ message: `Wrong ID - ${error}` });
-        return;
-      }
-      if (error.statusCode === 404) {
-        res.status(404).send({ message: 'User not found' });
         return;
       }
       res.status(500).send({ message: `${error}` });
@@ -44,7 +39,7 @@ const createUser = (req, res) => {
       res.status(200).send(user);
     })
     .catch((error) => {
-      if (error.name === 'ValidationError') {
+      if (error.name === 'ValidationError' || error.name === 'CastError') {
         res.status(400).send({ message: `Validation error - ${error}` });
         return;
       }
@@ -53,11 +48,15 @@ const createUser = (req, res) => {
 };
 
 const userInfoUpdate = (req, res) => {
-  User.findByIdAndUpdate('5fddaa97970de041ec182698', {
-    name: 'newName',
-    about: 'newDescription',
+  User.findByIdAndUpdate(req.user._id, {
+    name: 'newestName',
+    about: 'newestDescription',
   })
     .then((user) => {
+      if (!user) {
+        res.status(404).send({ message: 'User with this ID is not found' });
+        return;
+      }
       res.status(200).send({ data: user });
     })
     .catch((error) => {
@@ -70,10 +69,14 @@ const userInfoUpdate = (req, res) => {
 };
 
 const userAvatarUpdate = (req, res) => {
-  User.findByIdAndUpdate('5fddaa97970de041ec182698', {
-    avatar: 'https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg',
+  User.findByIdAndUpdate(req.user._id, {
+    avatar: 'https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpg',
   })
     .then((user) => {
+      if (!user) {
+        res.status(404).send({ message: 'User with this ID is not found' });
+        return;
+      }
       res.status(200).send({ data: user });
     })
     .catch((error) => {
