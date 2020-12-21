@@ -1,27 +1,90 @@
-const path = require('path');
-const getFileData = require('../helpers/files');
+const User = require('../models/user');
 
-const dataPath = path.join(__dirname, '..', 'data', 'users.json');
+const getUsers = (req, res) => {
+  User.find({})
+    .then((users) => {
+      if (users.length === 0) {
+        res.status(404).send({ message: 'Users not found' });
+        return;
+      }
+      res.status(200).send(users);
+    })
+    .catch((error) => {
+      res.status(500).send({ message: `Server error - ${error}` });
+    });
+};
 
-const getUsers = (req, res) => getFileData(dataPath)
-  .then((users) => {
-    if (!users) res.status(500).send({ message: 'Внутренняя ошибка сервера' });
-    else res.status(200).send(users);
+const getUserByID = (req, res) => {
+  User.findById(req.params.id)
+    .orFail(() => {
+      const err = new Error('User not found');
+      err.statusCode = 404;
+      throw err;
+    })
+    .then((user) => {
+      res.status(200).send(user);
+    })
+    .catch((error) => {
+      if (error.name === 'CastError') {
+        res.status(400).send({ message: `Wrong ID - ${error}` });
+        return;
+      }
+      if (error.statusCode === 404) {
+        res.status(404).send({ message: 'User not found' });
+        return;
+      }
+      res.status(500).send({ message: `${error}` });
+    });
+};
+
+const createUser = (req, res) => {
+  const { name, about, avatar } = req.body;
+  User.create({ name, about, avatar })
+    .then((user) => {
+      res.status(200).send(user);
+    })
+    .catch((error) => {
+      if (error.name === 'ValidationError') {
+        res.status(400).send({ message: `Validation error - ${error}` });
+        return;
+      }
+      res.status(500).send({ message: `Server error - ${error}` });
+    });
+};
+
+const userInfoUpdate = (req, res) => {
+  User.findByIdAndUpdate('5fddaa97970de041ec182698', {
+    name: 'newName',
+    about: 'newDescription',
   })
-  .catch((error) => res.status(500).send(error));
+    .then((user) => {
+      res.status(200).send({ data: user });
+    })
+    .catch((error) => {
+      if (error.name === 'ValidationError') {
+        res.status(400).send({ message: `Validation error - ${error}` });
+        return;
+      }
+      res.status(500).send({ message: `Server error - ${error}` });
+    });
+};
 
-const getUser = (req, res) => getFileData(dataPath)
-  .then((users) => {
-    if (!users) res.status(500).send({ message: 'Внутренняя ошибка сервера' });
-    return users;
+const userAvatarUpdate = (req, res) => {
+  User.findByIdAndUpdate('5fddaa97970de041ec182698', {
+    avatar: 'https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg',
   })
-  .then((users) => users.find((user) => user._id === req.params.id))
-  .then((user) => {
-    if (!user) {
-      return res.status(404).send({ message: 'Нет пользователя с таким id' });
-    }
-    return res.status(200).send(user);
-  })
-  .catch((error) => res.status(500).send(error));
+    .then((user) => {
+      res.status(200).send({ data: user });
+    })
+    .catch((error) => {
+      if (error.name === 'ValidationError') {
+        res.status(400).send({ message: `Validation error - ${error}` });
+        return;
+      }
+      res.status(500).send({ message: `Server error - ${error}` });
+    });
+};
 
-module.exports = { getUsers, getUser };
+module.exports = {
+  getUsers, getUserByID, createUser, userInfoUpdate, userAvatarUpdate,
+};
