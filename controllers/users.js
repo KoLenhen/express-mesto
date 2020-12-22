@@ -82,7 +82,7 @@ const userAvatarUpdate = (req, res) => {
       res.status(200).send({ data: user });
     })
     .catch((error) => {
-      if (error.name === 'ValidationError') {
+      if (error.name === 'ValidationError' || error.name === 'CastError') {
         res.status(400).send({ message: `Validation error - ${error}` });
         return;
       }
