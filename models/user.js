@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
     validate: {
       validator(v) {
         // eslint-disable-next-line max-len
-        return /^https?(www\.)?[\-\.\_\~\:\/\\?\#\[\]\@\!\$\&\'\(\)\*\+\,\;\=a-zA-Z0-9]*\#?$/.test(v);
+        return /https?:\/\/(www\.)?[-a-zA-Z0-9]{2,256}\.[a-z]{1,6}\b([-a-zA-Z0-9-._~:\/?#\[\]@!$&'()*+,;=\S]*)/.test(v);
       },
       message: 'wrong picture url address',
     },
