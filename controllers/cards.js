@@ -62,6 +62,10 @@ const addLike = (req, res) => {
     new: true,
   })
     .then((card) => {
+      if (!card) {
+        res.status(404).send({ message: "Card with such an id doesn't exist" });
+        return;
+      }
       res.status(200).send(card);
     })
     .catch((error) => {
@@ -86,6 +90,10 @@ const delLike = (req, res) => {
     new: true,
   })
     .then((card) => {
+      if (!card) {
+        res.status(404).send({ message: "Card with such an id doesn't exist" });
+        return;
+      }
       res.status(200).send(card);
     })
     .catch((error) => {
