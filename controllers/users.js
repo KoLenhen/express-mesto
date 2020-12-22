@@ -39,7 +39,7 @@ const createUser = (req, res) => {
       res.status(200).send(user);
     })
     .catch((error) => {
-      if (error.name === 'ValidationError' || error.name === 'CastError') {
+      if (error.name === 'ValidationError') {
         res.status(400).send({ message: `Validation error - ${error}` });
         return;
       }
@@ -48,9 +48,10 @@ const createUser = (req, res) => {
 };
 
 const userInfoUpdate = (req, res) => {
+  const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, {
-    name: 'newestName',
-    about: 'newestDescription',
+    name,
+    about,
   })
     .then((user) => {
       if (!user) {
@@ -60,7 +61,7 @@ const userInfoUpdate = (req, res) => {
       res.status(200).send({ data: user });
     })
     .catch((error) => {
-      if (error.name === 'ValidationError') {
+      if (error.name === 'ValidationError' || error.name === 'CastError') {
         res.status(400).send({ message: `Validation error - ${error}` });
         return;
       }
@@ -69,8 +70,9 @@ const userInfoUpdate = (req, res) => {
 };
 
 const userAvatarUpdate = (req, res) => {
+  const { avatar } = req.body;
   User.findByIdAndUpdate(req.user._id, {
-    avatar: 'https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpg',
+    avatar,
   })
     .then((user) => {
       if (!user) {
